@@ -31,12 +31,13 @@ git commit + push (experience assets are versioned and revertible)
 | [incident-review](.claude/skills/incident-review/SKILL.md) | Cross-project incident retrospectives: symptom + root cause + fix reference + prevention rule | 0 |
 | [debugging-playbook](.claude/skills/debugging-playbook/SKILL.md) | Misleading errors and pitfalls: the error points at A, the real cause is B | 4 |
 | [arch-constraints](.claude/skills/arch-constraints/SKILL.md) | Technical approaches disproven by real-world failure | 0 |
-| [danger-ops](.claude/skills/danger-ops/SKILL.md) | Hard-to-undo operations and their required pre-checks | 2 (generic) |
+| [danger-ops](.claude/skills/danger-ops/SKILL.md) | Hard-to-undo operations and their required pre-checks | 3 (2 generic + 1 sourced) |
 | [acceptance-bar](.claude/skills/acceptance-bar/SKILL.md) | Universal definition of done: what counts as finished | 0 |
-| [solution-blueprints](.claude/skills/solution-blueprints/SKILL.md) | Solution-level templates: steps + acceptance criteria + risk points | 1 |
+| [solution-blueprints](.claude/skills/solution-blueprints/SKILL.md) | Solution-level templates: steps + acceptance criteria + risk points | 2 |
 
-Current source projects: `virchant_wei_Page` (3 debugging-playbook pitfalls, 1 solution
-blueprint — ADR re-verification → implementation plan).
+Current source projects: `virchant_wei_Page` (3 debugging-playbook pitfalls; 2 solution
+blueprints — ADR re-verification → implementation plan, plan → GitHub issue backlog;
+1 danger-ops category — agent-framework `init` into an existing repo).
 
 ## Maintenance cadence
 
@@ -45,7 +46,7 @@ blueprint — ADR re-verification → implementation plan).
   D:\getFable, following its CLAUDE.md writing rules."
 - **Review**: after roughly every 10 new entries, run the three-way cross review
   (facts / logic / trigger conditions) in three fresh sessions — prompts are in
-  [CLAUDE.md](CLAUDE.md#three-way-cross-review). Currently 5 entries written back;
+  [CLAUDE.md](CLAUDE.md#three-way-cross-review). Currently 7 entries written back;
   not yet at the review threshold.
 - **Conflicts**: if a project defines a skill with the same name, the project-level
   skill wins; rename the skill in this library to step aside.

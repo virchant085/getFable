@@ -59,6 +59,49 @@ the same class of task instead of re-deriving it.
   research/verify agents + 3-lens plan review) producing `docs/p2-plan.md` v2;
   execution of that plan itself is the project's P2, pending
 
+### Implementation plan → dependency-linked GitHub issue backlog
+- Applicability: a reviewed implementation plan exists (slices/phases with acceptance
+  criteria) and work must become independently pickup-able by AFK agents or future
+  sessions with zero conversation memory. Not for: exploratory work without a plan,
+  or a 2–3-task list a single session will finish anyway.
+- Steps:
+  1. Split the plan into three issue kinds: **owner-decision issues** (one per
+     pending decision, `ready-for-human`, stating options/recommendation/what it
+     blocks and separating dev-blocking from go-live-blocking), **slice issues**
+     (one per independently mergeable+revertible PR, `ready-for-agent`, with
+     file-path-level tasks, mechanically checkable acceptance, rollback line), and
+     one **tracking board** (dependency graph + execution order + decision table).
+  2. Draft everything in ONE delimited file with `{{KEY}}` cross-reference tokens;
+     a parser script validates blocks/labels/refs via `--dry` before anything is
+     filed.
+  3. Inside agent-labeled issues, demarcate owner-only steps as an explicit
+     "Owner pre-steps" section (registrar/DB-console/payment-org/purchases) so an
+     AFK dispatch knows what is not its job.
+  4. Adversarially review the draft with fresh agents before filing — two lenses:
+     **fidelity-diff against the source plan** (every task lands exactly once,
+     nothing invented, dependencies match) and **AFK-executability** (self-contained,
+     checkable acceptance, correct labels, one-PR-sized).
+  5. File two-pass: create all issues capturing numbers, then edit bodies replacing
+     `{{KEY}}` with `#N` — this resolves forward references (decision issues citing
+     slice issues) that single-pass creation cannot.
+  6. Verify a filed issue renders with live links + milestone, then check off the
+     backlog item in the project's ledger.
+- Acceptance criteria: `--dry` passes (all refs resolve, labels exist in the repo —
+  `gh issue create --label` hard-fails on unknown labels); every cross-reference in
+  filed issues is a clickable `#N`; each slice issue is executable from its body plus
+  the referenced plan section alone; the tracking board's graph matches the issue
+  bodies' blocked-by lines.
+- Risk points: (1) **transcription drift is the killer** — converting plan→issues by
+  the same context that holds the plan produced 21 review findings including a HIGH
+  rule *inversion* (draft said "start on v1 if GA" where the plan said "pin 0.45.x,
+  spike later"), plus invented citations and invented parallelism; the fidelity lens
+  is not optional. (2) Filing is outward-facing — create labels/milestone before the
+  run, review before filing, because mass-editing filed issues is noisy. (3) Watch
+  label semantics: tracking boards don't get `needs-triage`, record-only decisions
+  don't get `ready-for-human`.
+- Verified in: virchant_wei_Page — issues #14–#32 on milestone "P2 — Auth · DB ·
+  Payments · Go-live", ledger commit `f12a0ce` (2026-07-03)
+
 ## Admission bar (strictly enforced)
 
 - Only plans that **landed and were verified in at least one project** are admitted;

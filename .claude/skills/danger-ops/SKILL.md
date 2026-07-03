@@ -24,6 +24,22 @@ pre-actions required before executing them.
   executing; prefer commands with a dry-run mode
 - Provenance: generic semantics
 
+### Running a third-party agent-framework `init` inside an existing repo
+- Danger: agent orchestration frameworks (ruflo/claude-flow class) scaffold far more
+  than config — the vetted case dropped 40+ helper scripts including its own
+  pre-commit/post-commit and an **auto-commit** hook, enabled 7 hook types in
+  `.claude/settings.json` (third-party scripts intercepting agent tool calls), wrote
+  `.mcp.json` + runtime dirs, and expected a resident daemon. This silently seizes
+  the repo's hook layer and commit discipline, and un-scaffolding is manual
+- Pre-actions: (1) run the `init` in a **throwaway sandbox dir first** and inventory
+  every file/settings mutation; (2) diff against the repo's existing hook layer
+  (husky, lint-staged, secret scanners) and commit rules — auto-commit hooks are an
+  instant conflict; (3) if anything collides, integrate the tool **externally
+  instead** (global CLI + MCP server registration outside the repo) and write the
+  per-repo `init` ban + sanctioned uses into the repo's agent docs
+- Provenance: virchant_wei_Page commit `464cdb1` (docs/agents/dev-workflow.md — ruflo
+  v3.16.3 sandbox-vetted 2026-07-03, `init` banned in-repo, MCP/CLI-only integration)
+
 ## Admission bar
 
 - New entries must be **category-level** operations (valid across projects), with the
