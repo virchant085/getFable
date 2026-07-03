@@ -41,6 +41,51 @@ Entry format:
 - Observation point: `git config core.autocrlf`; inspect line-ending bytes with a hex view
 - Provenance: getFable initial commit `5553931` — git conversion warnings at commit time
 
+### Locale switcher 404s on rapid clicks (`/xx/xx` double prefix), active button lags the URL
+- Environment: Next.js App Router + next-intl (locale-prefixed routing, client-side switching)
+- Surface error: second click during a locale switch navigates to a double-prefixed
+  path (`/zh/zh`) → 404; the switcher's active highlight stays on the previous locale
+- Real cause: next-intl's `usePathname()`/`useLocale()` strip the locale prefix via
+  React **context**, which lags one render behind the URL during a client-side
+  transition — mid-switch `usePathname()` returns the still-prefixed path, and
+  `router.replace(path, { locale })` prefixes it again
+- Observation point: compare next-intl's `usePathname()` against raw
+  `next/navigation` `usePathname()` mid-switch (the raw one moves first). Fix: derive
+  locale + remainder deterministically from the raw pathname matched against
+  `routing.locales`, never from context. Accept the fix by firing several
+  **synchronous** clicks (before React re-renders) — a single-click test cannot hit
+  the race window
+- Provenance: virchant_wei_Page commit `5b52507`
+
+### React 19 dev error "Encountered a script tag while rendering React component"
+- Environment: Next.js 15/16 + React 19 + next-themes (≤0.4.6; unmaintained since 2025-03)
+- Surface error: `Encountered a script tag while rendering React component. Scripts
+  inside React components are never executed when rendering on the client…` — call
+  stack points at your own ThemeProvider wrapper / root layout
+- Real cause: next-themes injects its no-FOUC theme `<script>` inside the provider,
+  and React 19's dev-only check flags ANY client-rendered `<script>`. It is a false
+  positive: the script already executed during SSR, and React strips the check from
+  production builds — nothing ships broken
+- Observation point: it fires on a cold page load with zero interaction (proving your
+  feature code is not the trigger). Upstream: shadcn-ui#10104, next-themes#387.
+  Leave it tracked (dev-only), or use shadcn's dev-only single-string console.error
+  filter; passing a CSP `nonce` prop does NOT silence it — that solves an unrelated
+  CSP concern
+- Provenance: virchant_wei_Page commit `ad3d9d4` (tracked in docs/hardening.md with upstream links)
+
+### One locale's page looks "compressed" versus the other (CJK/Latin bilingual UI)
+- Environment: any bilingual UI mixing CJK and Latin locales (zh/en, ja/en, …)
+- Surface error: none — the CJK page simply renders visibly shorter/tighter than the
+  Latin page, and suspicion lands on locale-specific CSS that doesn't exist
+- Real cause: translation length. CJK copy runs ~⅓–½ the visual length of its English
+  equivalent — a headline wrapping to 2 lines in English fits 1 line in CJK, and every
+  height computed from text flow collapses with it
+- Observation point: measure the same elements' `getBoundingClientRect().height` in
+  both locales (screenshots mislead; DOM numbers don't). Fix: reserve line-count
+  heights (`min-h` ≈ line-height × expected lines) on the text blocks that drive the
+  layout, so locales stay proportionally identical
+- Provenance: virchant_wei_Page commit `3c3b3c0`
+
 ## Related
 
 - If diagnosis cost exceeded half a day, archive it in
