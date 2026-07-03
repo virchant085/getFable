@@ -1,6 +1,6 @@
 ---
 name: solution-blueprints
-description: Use when designing a solution, landing a technology choice, planning a complex feature, or when the user asks for "a plan" — first check whether a verified blueprint for the same class of task exists. Not for small changes with an obvious fix, pure bug fixes, or investigation tasks that produce no plan.
+description: Use when producing a written plan or design — a multi-day or multi-module feature, a technology choice, a system design, or whenever the user explicitly asks for "a plan" — first check whether a verified blueprint for the same class of task exists. Not for routine features a competent developer would implement without a written plan, small changes with an obvious fix, pure bug fixes, or investigation tasks that produce no plan.
 ---
 
 # Solution-Level Template Library
@@ -42,9 +42,10 @@ the same class of task instead of re-deriving it.
      then fold the verdicts into a v2.
 - Acceptance criteria: every load-bearing claim carries a verdict + primary source;
   the plan names exact pins, not ranges; each slice is one mergeable/revertable PR;
-  the decision table distinguishes dev-blocking from go-live-blocking; step 6
-  produced concrete findings (a zero-finding review of a v1 plan is a red flag, not
-  a pass).
+  the decision table distinguishes dev-blocking from go-live-blocking; step 4's
+  completeness critique produced recorded findings (or an explicit zero-findings
+  verdict); step 6 produced concrete findings (a zero-finding review of a v1 plan
+  is a red flag, not a pass).
 - Risk points: (1) research agents sound authoritative but are ~5% wrong — in the
   source run 1 of 20 verified claims was REFUTED (a product's GA status); skipping
   step 3 ships that error into the plan. (2) The completeness critic found the single
@@ -55,9 +56,11 @@ the same class of task instead of re-deriving it.
   must be fresh agents. (4) Long multi-agent runs can die on session/rate limits
   mid-verification — use resumable orchestration (completed steps cached) so research
   is never re-paid.
-- Verified in: virchant_wei_Page, 2026-07-03 — process executed end-to-end (25
-  research/verify agents + 3-lens plan review) producing `docs/p2-plan.md` v2;
-  execution of that plan itself is the project's P2, pending
+- Verified in: virchant_wei_Page, 2026-07-03 — process executed end-to-end
+  (4 research tracks + 20 adversarial claim verifications + completeness critic +
+  3-lens plan review) producing `docs/p2-plan.md` v2; plan execution has begun —
+  slices S0/S1 landed and closed (issues #23/#24, commits `86c328f`…`f0b9029`,
+  CI green), remaining P2 slices pending
 
 ### Implementation plan → dependency-linked GitHub issue backlog
 - Applicability: a reviewed implementation plan exists (slices/phases with acceptance
@@ -90,7 +93,8 @@ the same class of task instead of re-deriving it.
   `gh issue create --label` hard-fails on unknown labels); every cross-reference in
   filed issues is a clickable `#N`; each slice issue is executable from its body plus
   the referenced plan section alone; the tracking board's graph matches the issue
-  bodies' blocked-by lines.
+  bodies' blocked-by lines; the step-4 fidelity + AFK-executability review ran before
+  filing, with findings (or an explicit zero-findings verdict) recorded.
 - Risk points: (1) **transcription drift is the killer** — converting plan→issues by
   the same context that holds the plan produced 21 review findings including a HIGH
   rule *inversion* (draft said "start on v1 if GA" where the plan said "pin 0.45.x,
@@ -132,7 +136,8 @@ the same class of task instead of re-deriving it.
   CI observed green live (not assumed from local runs).
 - Risk points: (1) executor evidence can be environment-contaminated — the source
   run's executor claimed a clean-env success that had inherited test placeholders
-  (see acceptance-bar "environment-stated evidence"); (2) new CI jobs pass YAML
+  (see the [acceptance-bar](../acceptance-bar/SKILL.md) "environment-stated evidence"
+  gate); (2) new CI jobs pass YAML
   validation and still fail their first live run (driver/servics mismatches only
   the real runner exposes) — budget a fix round after the first push; (3) the
   supervisor rubber-stamping the report instead of re-running gates collapses the

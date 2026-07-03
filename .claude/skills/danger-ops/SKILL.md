@@ -1,6 +1,6 @@
 ---
 name: danger-ops
-description: Use when about to execute a hard-to-undo operation — force push, reset --hard, bulk delete/rename, database migration, production change, release, or touching auth/payment code — check the pre-action list first. Not for read-only operations, ordinary add/commit/push, or local changes that can be undone at any time.
+description: Use when about to execute a hard-to-undo operation — force push, reset --hard, bulk delete/rename, database migration, production deployment or release, or landing a change to live auth/payment code paths — check the pre-action list first. Not for read-only operations, planning or design discussions that execute nothing, ordinary add/commit/push, or local changes that can be undone at any time.
 ---
 
 # Hard-to-Undo Operations Checklist

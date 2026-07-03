@@ -1,6 +1,6 @@
 ---
 name: incident-review
-description: Use when handling a production incident, performing a rollback/hotfix, or archiving lessons after fixing a costly bug (more than half a day to diagnose); also consult before executing high-risk changes to check for prior offenses of the same kind. Not for routine development without an incident, small bugs diagnosed within minutes, or first-time feature implementation.
+description: Use when handling a live production incident, performing a rollback or emergency hotfix, or archiving lessons after fixing a costly bug (more than half a day to diagnose). Not for the pre-execution safety check of a risky operation (that gate belongs to danger-ops, whose checklist consults this library), routine development without an incident, small bugs diagnosed within minutes, or first-time feature implementation.
 ---
 
 # Cross-Project Incident Library
@@ -10,7 +10,8 @@ consult them before acting.
 
 ## Incident records
 
-**No entries yet.** (Library established 2026-07-03; no project has written back yet.)
+**No entries yet.** (No incident has been written back to this skill yet; other
+skills in the library do have entries.)
 
 ## Admission bar (strictly enforced)
 

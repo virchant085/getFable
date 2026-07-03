@@ -1,6 +1,6 @@
 ---
 name: acceptance-bar
-description: Use when a change is considered finished and about to be committed or pushed — walk through the universal definition of done; also use before starting work to estimate how many gates "done" requires. Not for exploratory/throwaway intermediate changes, pure investigation tasks, or sessions that produce no commits.
+description: Use when a change is functionally complete and you are about to make the ordinary commit/push that lands it — walk through the universal definition of done; also usable at kickoff, but only for work that will clearly need multiple gates (release, migration, schema change), to count them upfront. Not for exploratory/throwaway intermediate changes, pure investigation or review-only sessions that produce no commits, or the safety check of hard-to-undo operations such as force pushes and production deploys (danger-ops covers those).
 ---
 
 # Universal Definition of Done
@@ -10,6 +10,9 @@ in that project's `.claude/skills/` or CLAUDE.md and **stack on top of** this li
 never replace it.
 
 ## Required gates
+
+(Founding floor — seeded at library creation and exempt from the escape-provenance
+requirement, per CLAUDE.md rule 2. The Admission bar below governs new gates only.)
 
 1. `git status --short` is clean — no forgotten files, no accidentally committed
    temp files or debug leftovers (console.log / print / commented-out blocks).

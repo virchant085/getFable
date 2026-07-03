@@ -11,7 +11,9 @@ Working in this repository = writing and maintaining these skill documents.
    admit it — direct it back into the source project's own `.claude/skills/`.
 2. **Every entry must carry a provenance reference**: source project name + a traceable
    credential (commit hash, PR/issue link, or file path). Anecdotes without provenance
-   must not be written.
+   must not be written. Two codified exemptions: entries marked "generic semantics"
+   (operations irreversible by definition, e.g. in danger-ops), and founding-floor
+   content explicitly labeled as such (acceptance-bar's Required gates).
 3. Skill body ≤300 lines; textbook methodology is excluded — only judgments verified
    in practice are admitted.
 4. The frontmatter `description` must state both the trigger condition ("Use when…")

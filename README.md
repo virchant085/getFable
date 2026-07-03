@@ -35,10 +35,11 @@ git commit + push (experience assets are versioned and revertible)
 | [acceptance-bar](.claude/skills/acceptance-bar/SKILL.md) | Universal definition of done: what counts as finished | 1 |
 | [solution-blueprints](.claude/skills/solution-blueprints/SKILL.md) | Solution-level templates: steps + acceptance criteria + risk points | 3 |
 
-Current source projects: `virchant_wei_Page` (6 debugging-playbook pitfalls; 3 solution
+Current source projects: `virchant_wei_Page` (5 debugging-playbook pitfalls; 3 solution
 blueprints — ADR re-verification → implementation plan, plan → GitHub issue backlog,
 supervised slice execution; 1 danger-ops category — agent-framework `init` into an
-existing repo; 1 acceptance-bar gate — environment-stated evidence).
+existing repo; 1 acceptance-bar gate — environment-stated evidence) and `getFable`
+itself (1 debugging-playbook pitfall — CRLF line endings).
 
 ## Maintenance cadence
 
@@ -47,7 +48,8 @@ existing repo; 1 acceptance-bar gate — environment-stated evidence).
   D:\getFable, following its CLAUDE.md writing rules."
 - **Review**: after roughly every 10 new entries, run the three-way cross review
   (facts / logic / trigger conditions) in three fresh sessions — prompts are in
-  [CLAUDE.md](CLAUDE.md#three-way-cross-review). Currently 11 entries written back —
-  **the ~10-entry review threshold is reached: run the three-way cross review (facts / logic / triggers) in three fresh sessions before the next write-back.**
+  [CLAUDE.md](CLAUDE.md#three-way-cross-review). First review completed 2026-07-04
+  at 11 entries (22 provenance refs checked: 17 OK, 1 wrong, 1 stale, 3 unverifiable —
+  all findings fixed); next review after ~10 more entries.
 - **Conflicts**: if a project defines a skill with the same name, the project-level
   skill wins; rename the skill in this library to step aside.

@@ -1,12 +1,12 @@
 ---
 name: debugging-playbook
-description: Use when hitting a runtime error, test failure, build failure, or behavior that contradicts expectations and the cause needs locating — first check whether the error is a known "misleading error". Not for new feature design, documentation-only changes, or routine development with no anomaly yet.
+description: Use when hitting a runtime error, test failure, build failure, or behavior that contradicts expectations and the cause needs locating — first check whether the error is a known "misleading error"; also use immediately after a diagnosis in which the error message or symptom pointed away from the real cause, to record the new misleading error. Not for new feature design, documentation-only changes, or routine development with no anomaly yet.
 ---
 
 # Misleading Errors and Pitfalls
 
 Collects cross-project-reproduced cases where "the error points at A, but the real
-cause is B", turning half-day diagnoses into a single table lookup.
+cause is B", turning would-be half-day diagnoses into a single table lookup.
 
 ## Admission bar
 
@@ -35,11 +35,14 @@ Entry format:
 
 ### Cross-platform script line-ending anomalies
 - Environment: Windows + git (core.autocrlf enabled by default)
-- Surface error: shell scripts fail with `\r: command not found`; diff shows the whole
-  file changed; hash checks mismatch
+- Surface error: LF→CRLF conversion warnings at commit time (observed). Known
+  downstream failure modes of the same mechanism (not yet hit in a source project):
+  shell scripts failing with `\r: command not found`, whole-file diffs, hash mismatches
 - Real cause: git performs LF→CRLF auto-conversion on Windows
 - Observation point: `git config core.autocrlf`; inspect line-ending bytes with a hex view
-- Provenance: getFable initial commit `5553931` — git conversion warnings at commit time
+- Provenance: getFable initial commit `5553931` on a machine with
+  `core.autocrlf=true` (checkable); the commit-time warnings themselves are
+  ephemeral console output, environment-observed
 
 ### Locale switcher 404s on rapid clicks (`/xx/xx` double prefix), active button lags the URL
 - Environment: Next.js App Router + next-intl (locale-prefixed routing, client-side switching)
@@ -113,7 +116,7 @@ Entry format:
   env seam; CLI configs are evaluated eagerly for EVERY subcommand, so the offline
   ones inherit the online ones' requirements. Trap variant: the bug hides if
   verification runs in a shell where placeholder env vars are exported (see the
-  acceptance-bar "environment-stated evidence" gate)
+  [acceptance-bar](../acceptance-bar/SKILL.md) "environment-stated evidence" gate)
 - Observation point: run the offline subcommand in a PROVABLY clean shell (print an
   env check first). Fix: CLI config reads `process.env.X ?? ""` leniently — the CLI
   layer sits outside the app boundary; online subcommands still fail closed via the

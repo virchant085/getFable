@@ -10,7 +10,8 @@ projects from walking the same dead ends.
 
 ## Ban list
 
-**No entries yet.** (Library established 2026-07-03; no project has written back yet.)
+**No entries yet.** (No ban has been written back to this skill yet; other skills
+in the library do have entries.)
 
 ## Admission bar (strictly enforced)
 
