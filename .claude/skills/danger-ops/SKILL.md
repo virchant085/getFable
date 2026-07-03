@@ -1,43 +1,47 @@
 ---
 name: danger-ops
-description: 当准备执行难以撤销的操作时使用——强制推送、reset --hard、批量删除/重命名、数据库迁移、生产环境变更、发布、改动认证或支付相关代码——先核对前置动作清单。不适用于：只读操作、普通的 add/commit/push、可随时撤销的本地改动。
+description: Use when about to execute a hard-to-undo operation — force push, reset --hard, bulk delete/rename, database migration, production change, release, or touching auth/payment code — check the pre-action list first. Not for read-only operations, ordinary add/commit/push, or local changes that can be undone at any time.
 ---
 
-# 高危操作清单
+# Hard-to-Undo Operations Checklist
 
-收录在任何项目中都难以撤销的操作类别，以及执行前必须完成的前置动作。
-"可以做，但必须先做 X"的规则放这里；"根本不要做"放 [arch-constraints](../arch-constraints/SKILL.md)。
+Collects operation categories that are hard to undo in any project, plus the
+pre-actions required before executing them.
+"Allowed, but must do X first" lives here; "do not do it at all" lives in
+[arch-constraints](../arch-constraints/SKILL.md).
 
-## 操作清单
+## Operations
 
-### git 强制推送 / reset --hard / clean -f
-- 危险性质：不可逆地丢弃提交或未跟踪文件
-- 前置动作：先 `git log --oneline -5` 确认将被覆盖/丢弃的内容；
-  有疑问先打 tag 或 `git branch backup/<日期>` 再执行
-- 出处：git 通用语义（destructive by design），无需项目证据
+### git force push / reset --hard / clean -f
+- Danger: irreversibly discards commits or untracked files
+- Pre-actions: run `git log --oneline -5` first to confirm what will be overwritten
+  or dropped; when in doubt, tag or `git branch backup/<date>` before executing
+- Provenance: generic git semantics (destructive by design), no incident evidence required
 
-### 批量文件删除 / 重命名（脚本化）
-- 危险性质：波及面在执行前难以完整预估
-- 前置动作：先以只读方式列出完整受影响清单并人工过目，再执行；
-  优先用带 dry-run 的命令
-- 出处：通用语义
+### Scripted bulk file deletion / renaming
+- Danger: the blast radius is hard to fully estimate before execution
+- Pre-actions: produce the complete affected-file list read-only and review it before
+  executing; prefer commands with a dry-run mode
+- Provenance: generic semantics
 
-## 写入门槛
+## Admission bar
 
-- 新增条目须为**类别级**操作（跨项目成立），附首次出事的项目 + 出处，
-  或标注"通用语义"（操作本身定义为不可逆，无需事故证据）。
-- 单项目的高危文件/模块（"改这个文件必须先跑某测试"）写回该项目自己的
-  `.claude/skills/`，不放本库。
+- New entries must be **category-level** operations (valid across projects), with the
+  project + reference of the first incident, or marked "generic semantics" (the
+  operation is irreversible by definition, no incident evidence needed).
+- Project-specific dangerous files/modules ("must run test X before touching this
+  file") go into that project's own `.claude/skills/`, not this library.
 
-条目格式：
+Entry format:
 
 ```
-### <操作类别>
-- 危险性质：不可逆地破坏什么
-- 前置动作：执行前必须完成的动作（可核对、可执行）
-- 出处：<项目名 + incident-review 条目 / commit>，或"通用语义"
+### <operation category>
+- Danger: what gets irreversibly broken
+- Pre-actions: what must be completed before executing (checkable, executable)
+- Provenance: <project + incident-review entry / commit>, or "generic semantics"
 ```
 
-## 维护规则
+## Maintenance rules
 
-- 每次 [incident-review](../incident-review/SKILL.md) 归档的故障若源于某类操作，评估是否在此新增类别。
+- Whenever an [incident-review](../incident-review/SKILL.md) record stems from a class
+  of operation, evaluate adding that category here.

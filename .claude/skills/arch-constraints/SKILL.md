@@ -1,38 +1,43 @@
 ---
 name: arch-constraints
-description: 当做技术选型、引入新依赖、设计模块边界或大规模重构时使用，检查方案是否踩中已被实际失败证伪的路线。不适用于：不改变结构的局部修改、文档改动、bug 修复。
+description: Use when choosing technology, adding a new dependency, designing module boundaries, or planning a large refactor — check whether the plan repeats an approach already disproven by real failure. Not for local changes that leave structure intact, documentation changes, or bug fixes.
 ---
 
-# 被证伪的技术路线
+# Disproven Technical Approaches
 
-收录在任何项目中**被实际失败证伪**的方案，防止在新项目里重走死路。
+Collects approaches **disproven by actual failure** in any project, preventing new
+projects from walking the same dead ends.
 
-## 禁令清单
+## Ban list
 
-**暂无条目。**（库建立于 2026-07-03，尚无项目回写。）
+**No entries yet.** (Library established 2026-07-03; no project has written back yet.)
 
-## 写入门槛（严格执行）
+## Admission bar (strictly enforced)
 
-禁令必须从**失败证据**反推，不从审美或流行观点出发：
+Bans must be derived from **failure evidence**, never from taste or fashion:
 
-- 证据只能是：具体项目的 revert commit、废弃分支、被关闭且注明原因的 PR，
-  或 [incident-review](../incident-review/SKILL.md) 中的故障记录。
-- "业界都说不好"不构成禁令。写不出证据的约束一律不收。
-- 只收跨项目仍成立的禁令；绑定单项目上下文的写回该项目。
+- Acceptable evidence: a specific project's revert commit, an abandoned branch, a PR
+  closed with a stated reason, or an incident record in
+  [incident-review](../incident-review/SKILL.md).
+- "The industry says it's bad" does not constitute a ban. Constraints without
+  evidence are rejected.
+- Only bans that hold across projects are admitted; ones bound to a single project's
+  context go back into that project.
 
-条目格式：
+Entry format:
 
 ```
-### 不许：<一句话禁令>
-- 适用范围：什么类型的项目/场景下成立
-- 当初为什么这么做：当时的合理动机（防止后人觉得前人愚蠢而重蹈覆辙）
-- 怎么失败的：
-- 证据：<项目名 + revert commit / 废弃分支名 / PR 链接>
-- 例外条件：什么情况下这条禁令可以被重新讨论
+### Do not: <one-line ban>
+- Scope: what kinds of projects/scenarios this holds for
+- Why it was done originally: the reasonable motivation at the time
+  (so successors don't dismiss predecessors as fools and repeat the mistake)
+- How it failed:
+- Evidence: <project + revert commit / abandoned branch / PR link>
+- Exception: under what conditions this ban may be reopened for discussion
 ```
 
-## 与其他技能的边界
+## Boundaries with other skills
 
-- "可以做但必须有前置动作" → [danger-ops](../danger-ops/SKILL.md)
-- "做完后怎么验证" → [acceptance-bar](../acceptance-bar/SKILL.md)
-- 本文件只收"根本不要做"。
+- "Allowed, but requires pre-checks" → [danger-ops](../danger-ops/SKILL.md)
+- "How to verify once done" → [acceptance-bar](../acceptance-bar/SKILL.md)
+- This file only collects "do not do it at all".

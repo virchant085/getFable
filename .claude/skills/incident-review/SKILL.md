@@ -1,37 +1,42 @@
 ---
 name: incident-review
-description: 当处理线上故障、执行回滚/hotfix，或修完一个代价高昂（定位超过半天）的 bug 需要归档教训时使用；执行高风险变更前也应先查阅本库看是否有同类前科。不适用于：无故障背景的常规开发、几分钟内定位的小 bug、首次实现新功能。
+description: Use when handling a production incident, performing a rollback/hotfix, or archiving lessons after fixing a costly bug (more than half a day to diagnose); also consult before executing high-risk changes to check for prior offenses of the same kind. Not for routine development without an incident, small bugs diagnosed within minutes, or first-time feature implementation.
 ---
 
-# 跨项目故障复盘库
+# Cross-Project Incident Library
 
-收录任何项目中发生过的故障与高代价 bug，供后续所有项目在动手前借鉴。
+Collects incidents and high-cost bugs from any project, so every future project can
+consult them before acting.
 
-## 故障记录
+## Incident records
 
-**暂无条目。**（库建立于 2026-07-03，尚无项目回写。）
+**No entries yet.** (Library established 2026-07-03; no project has written back yet.)
 
-## 写入门槛（严格执行）
+## Admission bar (strictly enforced)
 
-- 每条记录必须注明**来源项目 + 可追溯出处**（修复 commit hash、PR/issue 链接）。没有出处的口头教训不许写。
-- 只收"换一个项目仍可能再犯"的故障；单项目特有的故障写回该项目自己的 `.claude/skills/`。
-- "现象"写观测到的事实，不写猜测；"根因"必须是被修复验证过的结论。
+- Every record must name the **source project + a traceable reference** (fix commit
+  hash, PR/issue link). Anecdotes without provenance must not be written.
+- Only incidents that "could recur in a different project" are admitted; incidents
+  specific to a single project go back into that project's own `.claude/skills/`.
+- "Symptom" records observed facts, not guesses; "root cause" must be a conclusion
+  verified by the fix.
 
-条目格式：
+Entry format:
 
 ```
-### <日期> <一句话现象>
-- 项目：<项目名 / 仓库地址>
-- 现象：用户/系统观测到什么
-- 根因：
-- 修复：<commit hash 或 PR 链接>（如有回滚，附被回滚的 commit）
-- 防再发：由此产生的通用规则，以及规则落到了本库哪个文件
-  （高危操作 → ../danger-ops/SKILL.md；技术路线禁令 → ../arch-constraints/SKILL.md；
-   新增门禁 → ../acceptance-bar/SKILL.md；假报错 → ../debugging-playbook/SKILL.md）
+### <date> <one-line symptom>
+- Project: <name / repo URL>
+- Symptom: what the user/system observed
+- Root cause:
+- Fix: <commit hash or PR link> (if rolled back, include the reverted commit)
+- Prevention: the general rule this produced, and which file in this library it landed in
+  (risky operations → ../danger-ops/SKILL.md; approach bans → ../arch-constraints/SKILL.md;
+   new gates → ../acceptance-bar/SKILL.md; misleading errors → ../debugging-playbook/SKILL.md)
 ```
 
-## 维护规则
+## Maintenance rules
 
-- 每条故障必须产出至少一条"防再发"，且落到对应技能文件里——
-  只归档不产规则的记录是无效记录。
-- 同一根因在不同项目第二次出现时，升级处理：检查上次的防再发规则为什么没拦住。
+- Every incident must produce at least one "prevention" rule, landed in the matching
+  skill file — a record that archives without producing a rule is invalid.
+- When the same root cause recurs in a different project, escalate: examine why the
+  previous prevention rule failed to catch it.

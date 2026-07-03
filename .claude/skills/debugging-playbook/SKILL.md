@@ -1,40 +1,47 @@
 ---
 name: debugging-playbook
-description: 当遇到运行报错、测试失败、构建失败或行为与预期不符需要定位原因时使用，先查报错是否是已知的"假报错"。不适用于：新功能设计、纯文档改动、尚未出现异常的常规开发。
+description: Use when hitting a runtime error, test failure, build failure, or behavior that contradicts expectations and the cause needs locating — first check whether the error is a known "misleading error". Not for new feature design, documentation-only changes, or routine development with no anomaly yet.
 ---
 
-# 假报错与坑库
+# Misleading Errors and Pitfalls
 
-收录跨项目复现过的"报错指向 A、真实原因是 B"的坑，让定位从半天缩短到一次查表。
+Collects cross-project-reproduced cases where "the error points at A, but the real
+cause is B", turning half-day diagnoses into a single table lookup.
 
-## 收录门槛
+## Admission bar
 
-一条经验能写进来，必须满足其一，且必须是跨项目可复用的（单项目特有的写回该项目）：
+An entry must satisfy at least one of the following, and must be reusable across
+projects (project-specific ones go back into that project):
 
-- 是一个**假报错**：报错信息指向 A，真实原因是 B（附首次踩坑的项目 + commit/issue）
-- 是一条**非显然的观测点**：从报错本身读不出来的日志/状态位置
-- 是一套**复现套路**：曾经花超过 30 分钟才复现出来的一类问题
+- A **misleading error**: the message points at A, the real cause is B (with the
+  project + commit/issue where it was first hit)
+- A **non-obvious observation point**: a log/state location the error itself does
+  not reveal
+- A **reproduction recipe**: a class of problem that once took over 30 minutes to
+  reproduce
 
-条目格式：
+Entry format:
 
 ```
-### <症状的一句话描述>
-- 环境：<语言/框架/OS 等适用范围>
-- 表面报错：贴关键行（不超过 3 行）
-- 真实原因：
-- 观测点：日志/文件/命令在哪
-- 出处：<项目名 + commit / issue / PR>
+### <one-line symptom>
+- Environment: <language/framework/OS scope where this applies>
+- Surface error: paste the key lines (3 max)
+- Real cause:
+- Observation point: where the log/file/command is
+- Provenance: <project + commit / issue / PR>
 ```
 
-## 已收录条目
+## Entries
 
-### 跨平台脚本换行符异常
-- 环境：Windows + git（core.autocrlf 默认开启）
-- 表面报错：shell 脚本报 `\r: command not found`、diff 显示整文件被改动、hash 校验不一致
-- 真实原因：git 在 Windows 上做 LF→CRLF 自动转换
-- 观测点：`git config core.autocrlf`；`file`/十六进制查看行尾字节
-- 出处：getFable 初始 commit `5553931` 时的 git 转换警告
+### Cross-platform script line-ending anomalies
+- Environment: Windows + git (core.autocrlf enabled by default)
+- Surface error: shell scripts fail with `\r: command not found`; diff shows the whole
+  file changed; hash checks mismatch
+- Real cause: git performs LF→CRLF auto-conversion on Windows
+- Observation point: `git config core.autocrlf`; inspect line-ending bytes with a hex view
+- Provenance: getFable initial commit `5553931` — git conversion warnings at commit time
 
-## 关联
+## Related
 
-- 定位到根因且代价超过半天 → 去 [incident-review](../incident-review/SKILL.md) 归档。
+- If diagnosis cost exceeded half a day, archive it in
+  [incident-review](../incident-review/SKILL.md).

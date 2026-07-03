@@ -1,40 +1,47 @@
-# getFable — 跨项目工程经验库
+# getFable — Cross-Project Engineering Experience Library
 
-把 Fable 5 在各项目中的高阶产出（难 bug 根因、被证伪的方案、可复用的解决方案）
-沉淀为结构化技能文档，同步到全局 `~/.claude/skills/`，供轻量模型（Opus 4.8 等）
-在**所有项目**中自动触发复用。
+Distills high-level outputs from Claude Fable 5 sessions (hard-bug root causes,
+disproven approaches, reusable solution blueprints) into structured skill documents,
+synced to the global `~/.claude/skills/` so that lightweight models (Opus 4.8 etc.)
+can automatically trigger and reuse them in **every project**.
 
-## 工作流
+## Workflow
 
 ```
-Fable 5 解决难题（任意项目）
+Fable 5 solves a hard problem (in any project)
         │
         ▼
-判断：换一个项目还成立吗？
-        │ 是                          │ 否
+Ask: would this still hold in a different project?
+        │ yes                         │ no
         ▼                             ▼
-回写一条到本库对应技能          写回那个项目自己的 .claude/skills/
+Write one entry into the        Write it back into that project's
+matching skill in this repo     own .claude/skills/
         │
         ▼
-运行 .\sync.ps1 → 同步到 ~/.claude/skills/（全局生效）
+Run .\sync.ps1 → mirror to ~/.claude/skills/ (takes effect globally)
         │
         ▼
-git commit + push（经验资产可版本化、可回滚）
+git commit + push (experience assets are versioned and revertible)
 ```
 
-## 技能目录
+## Skill catalog
 
-| 技能 | 收什么 |
+| Skill | What it collects |
 |---|---|
-| [incident-review](.claude/skills/incident-review/SKILL.md) | 跨项目故障复盘：现象 + 根因 + 修复出处 + 防再发 |
-| [debugging-playbook](.claude/skills/debugging-playbook/SKILL.md) | 假报错与坑：报错指向 A、真因是 B |
-| [arch-constraints](.claude/skills/arch-constraints/SKILL.md) | 被实际失败证伪过的技术路线 |
-| [danger-ops](.claude/skills/danger-ops/SKILL.md) | 难以撤销的高危操作及其前置动作 |
-| [acceptance-bar](.claude/skills/acceptance-bar/SKILL.md) | 通用完成门禁：什么算改完了 |
-| [solution-blueprints](.claude/skills/solution-blueprints/SKILL.md) | 方案级模板：步骤 + 验收标准 + 风险点 |
+| [incident-review](.claude/skills/incident-review/SKILL.md) | Cross-project incident retrospectives: symptom + root cause + fix reference + prevention rule |
+| [debugging-playbook](.claude/skills/debugging-playbook/SKILL.md) | Misleading errors and pitfalls: the error points at A, the real cause is B |
+| [arch-constraints](.claude/skills/arch-constraints/SKILL.md) | Technical approaches disproven by real-world failure |
+| [danger-ops](.claude/skills/danger-ops/SKILL.md) | Hard-to-undo operations and their required pre-checks |
+| [acceptance-bar](.claude/skills/acceptance-bar/SKILL.md) | Universal definition of done: what counts as finished |
+| [solution-blueprints](.claude/skills/solution-blueprints/SKILL.md) | Solution-level templates: steps + acceptance criteria + risk points |
 
-## 维护节奏
+## Maintenance cadence
 
-- **回写**：Fable 5 会话结束前，用一句话提示：「把本次可跨项目复用的经验回写到 D:\getFable 对应技能，遵守其 CLAUDE.md 写入规则」。
-- **审校**：每积累约 10 条新经验，开三个全新会话跑三路交叉审校（事实 / 逻辑 / 触发条件），提示词见 [CLAUDE.md](CLAUDE.md#三路审校)。
-- **冲突**：若某项目已有同名技能，项目级技能优先；本库技能改名避让即可。
+- **Write-back**: before ending a Fable 5 session, add one line: "Write back any
+  cross-project-reusable experience from this session into the matching skill in
+  D:\getFable, following its CLAUDE.md writing rules."
+- **Review**: after roughly every 10 new entries, run the three-way cross review
+  (facts / logic / trigger conditions) in three fresh sessions — prompts are in
+  [CLAUDE.md](CLAUDE.md#three-way-cross-review).
+- **Conflicts**: if a project defines a skill with the same name, the project-level
+  skill wins; rename the skill in this library to step aside.

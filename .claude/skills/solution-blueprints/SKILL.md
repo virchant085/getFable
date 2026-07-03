@@ -1,38 +1,42 @@
 ---
 name: solution-blueprints
-description: 当要做方案设计、技术选型落地、复杂功能的实施规划，或用户要求"给个方案"时使用，先查是否有已验证的同类蓝图可套用。不适用于：一眼能看出改法的小改动、纯 bug 修复、不产出方案的调查任务。
+description: Use when designing a solution, landing a technology choice, planning a complex feature, or when the user asks for "a plan" — first check whether a verified blueprint for the same class of task exists. Not for small changes with an obvious fix, pure bug fixes, or investigation tasks that produce no plan.
 ---
 
-# 方案级模板库
+# Solution-Level Template Library
 
-收录经实际项目验证过的解决方案蓝图。每个蓝图 = 步骤 + 验收标准 + 风险点，
-让轻量模型在同类任务上直接套用，而不是重新推理一遍。
+Collects solution blueprints verified in real projects. Each blueprint = steps +
+acceptance criteria + risk points, so a lightweight model can apply it directly to
+the same class of task instead of re-deriving it.
 
-## 蓝图清单
+## Blueprints
 
-**暂无条目。**（库建立于 2026-07-03，尚无项目回写。）
+**No entries yet.** (Library established 2026-07-03; no project has written back yet.)
 
-## 写入门槛（严格执行）
+## Admission bar (strictly enforced)
 
-- 只收**已在至少一个项目落地并验证**的方案；纸面设计不收。
-- 必须注明来源项目 + 落地凭证（PR 链接 / commit 区间）。
-- 只收跨项目可复用的方案骨架；与单项目强绑定的细节剥离掉或写回该项目。
+- Only plans that **landed and were verified in at least one project** are admitted;
+  paper designs are rejected.
+- Must name the source project + landing reference (PR link / commit range).
+- Only cross-project-reusable skeletons are admitted; details bound to a single
+  project are stripped or written back into that project.
 
-蓝图格式：
+Blueprint format:
 
 ```
-### <方案名：解决什么问题>
-- 适用场景：什么信号说明该用这个蓝图；什么信号说明不该用
-- 步骤：
-  1. …（每步写"做什么 + 产出什么"，可被逐步执行）
-- 验收标准：每个关键步骤怎样算完成（可核对的输出/命令）
-- 风险点：哪一步最容易出错、出错的征兆、对应的回退动作
-- 已验证：<项目名 + PR / commit 区间>
+### <blueprint name: what problem it solves>
+- Applicability: what signals say to use this blueprint; what signals say not to
+- Steps:
+  1. … (each step states "do what + produces what", executable one by one)
+- Acceptance criteria: what "complete" means for each key step (checkable output/command)
+- Risk points: which step fails most easily, the failure symptoms, and the rollback action
+- Verified in: <project + PR / commit range>
 ```
 
-## 维护规则
+## Maintenance rules
 
-- 蓝图第二次被套用时，把新项目的差异回写进"适用场景"或"风险点"——
-  蓝图的价值随验证次数增长。
-- 套用后失败的蓝图不删除：在条目内记录失败场景，收窄适用范围；
-  被彻底证伪则移入 [arch-constraints](../arch-constraints/SKILL.md)。
+- When a blueprint is applied a second time, write the new project's deltas back into
+  "Applicability" or "Risk points" — a blueprint's value grows with verification count.
+- A blueprint that fails when applied is not deleted: record the failure scenario in
+  the entry and narrow its applicability; if thoroughly disproven, move it into
+  [arch-constraints](../arch-constraints/SKILL.md).
