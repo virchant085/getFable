@@ -86,6 +86,40 @@ Entry format:
   layout, so locales stay proportionally identical
 - Provenance: virchant_wei_Page commit `3c3b3c0`
 
+### CI migrations fail against a plain Postgres container (drizzle-kit + Neon)
+- Environment: drizzle-kit (≥0.30 driver auto-detection) + `@neondatabase/serverless`
+  in dependencies + any plain-TCP Postgres target (CI service container, local PG)
+- Surface error: `Using '@neondatabase/serverless' driver for database querying` +
+  `Warning: ... can only connect to remote Neon ... through a websocket` → spinner →
+  exit 1. **drizzle-kit swallows the underlying connection error** (stderr is empty,
+  no ECONNREFUSED ever prints) — the driver banner line is the only tell
+- Real cause: drizzle-kit auto-detects its connection driver from installed packages;
+  with only the Neon serverless driver present it picks the WebSocket driver, which
+  cannot speak plain TCP. The app's own driver imports are irrelevant — this is the
+  CLI's independent detection
+- Observation point: the `Using 'X' driver` banner in the migrate output. Fix: add
+  `pg` (node-postgres) as a devDependency — detection prefers it, the CLI speaks
+  plain TCP, the app runtime (explicit driver imports) is untouched
+- Provenance: virchant_wei_Page CI run 28683394908 (first live run of the
+  migration-proof job) + fix commit `f0b9029`
+
+### Offline CLI subcommands demand credentials (CLI config routed through a fail-closed env module)
+- Environment: any repo with a fail-closed typed env module + a CLI tool whose config
+  file is plain code evaluated at load (drizzle-kit, and the pattern generalizes)
+- Surface error: a purely offline subcommand (`drizzle-kit generate` — a schema diff
+  that touches no database) dies at config load with the env module's
+  missing-variable error
+- Real cause: the config file read connection strings through the app's fail-closed
+  env seam; CLI configs are evaluated eagerly for EVERY subcommand, so the offline
+  ones inherit the online ones' requirements. Trap variant: the bug hides if
+  verification runs in a shell where placeholder env vars are exported (see the
+  acceptance-bar "environment-stated evidence" gate)
+- Observation point: run the offline subcommand in a PROVABLY clean shell (print an
+  env check first). Fix: CLI config reads `process.env.X ?? ""` leniently — the CLI
+  layer sits outside the app boundary; online subcommands still fail closed via the
+  tool's own param validation, and the app-runtime seam keeps strict semantics
+- Provenance: virchant_wei_Page commit `d18538e` (supervisor-caught during issue #24)
+
 ## Related
 
 - If diagnosis cost exceeded half a day, archive it in

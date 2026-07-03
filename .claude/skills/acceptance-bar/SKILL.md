@@ -36,6 +36,22 @@ Entry format:
 - Origin: <project + commit / incident-review entry>
 ```
 
+## Gates from real escapes
+
+### Environment-stated evidence
+- Check: any verification claim of the form "X works with/without env Y" (no-env
+  build, clean-env CLI run, feature-flag-off behavior) must include, in the same
+  captured run, the output of a check proving the environment state — e.g.
+  `node -e "console.log(Boolean(process.env.DATABASE_URL))"` printed alongside the
+  command output. Pass = the evidence shows the precondition held; fail = a bare
+  claim, however green the output looks.
+- Why it escaped: an executing agent reported "`db:generate` succeeds with no env"
+  as verified — but the run inherited placeholder env vars its own tests had
+  exported. In a provably clean shell the command failed at config load. The claim
+  was believed done and wasn't; only a supervisor re-run with a printed env check
+  caught it.
+- Origin: virchant_wei_Page issue #24 rework 1 (2026-07-04), fix in commit `d18538e`
+
 ## Related
 
 - Gate failed and the cause is unclear → [debugging-playbook](../debugging-playbook/SKILL.md)

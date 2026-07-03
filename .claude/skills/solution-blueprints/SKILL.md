@@ -102,6 +102,45 @@ the same class of task instead of re-deriving it.
 - Verified in: virchant_wei_Page — issues #14–#32 on milestone "P2 — Auth · DB ·
   Payments · Go-live", ledger commit `f12a0ce` (2026-07-03)
 
+### Supervised slice execution: executor/supervisor split with first-hand re-verification
+- Applicability: issue-driven implementation where one agent (or person) executes a
+  well-specified work order and a second context supervises quality before anything
+  lands. Worth the overhead when the change touches infrastructure, security, or
+  anything whose verification is environment-sensitive. Not for: trivial edits, or
+  when no second context is available (then self-review against the same checklist).
+- Steps:
+  1. Dispatch with a contract: the executor reads the issue + spec + house rules,
+     IMPLEMENTS and VERIFIES, but does NOT commit/push/close — the working tree is
+     the handoff. Require a structured report: FILES / EVIDENCE-per-DoD-item /
+     DECISIONS / CONCERNS.
+  2. Supervisor verifies the file list matches the report (`git status`), then
+     RE-RUNS every quality gate first-hand — never adjudicate from the report alone.
+  3. Spot-read the critical code (boundaries, fail-closed paths, config files) and
+     hunt for claims that contradict the code (an eager parse claimed lazy, an
+     "offline" command that reads credentials).
+  4. Adjudicate each reported CONCERN explicitly — accept / reject / defer with a
+     recorded rationale; concerns the executor surfaces honestly are where the real
+     architectural decisions hide.
+  5. Return work with REPRODUCED findings only (the failing command + output, the
+     required fix, the re-verification list) — not vibes. The executor resumes with
+     its context intact and reports deltas.
+  6. Supervisor commits in logical units, watches CI live (a new CI job is unproven
+     until its first real run), and closes the issue distinguishing
+     supervisor-verified evidence from executor-reported evidence.
+- Acceptance criteria: every gate in the close-out was re-run by the supervisor;
+  every returned finding carried a reproduction; concerns have recorded verdicts;
+  CI observed green live (not assumed from local runs).
+- Risk points: (1) executor evidence can be environment-contaminated — the source
+  run's executor claimed a clean-env success that had inherited test placeholders
+  (see acceptance-bar "environment-stated evidence"); (2) new CI jobs pass YAML
+  validation and still fail their first live run (driver/servics mismatches only
+  the real runner exposes) — budget a fix round after the first push; (3) the
+  supervisor rubber-stamping the report instead of re-running gates collapses the
+  whole pattern into ceremony.
+- Verified in: virchant_wei_Page issues #23 + #24 (commits `86c328f`…`f0b9029`,
+  2026-07-03/04) — two slices, two supervisor-caught defects (a false clean-env
+  claim; a CI driver incompatibility), both fixed by the resumed executor
+
 ## Admission bar (strictly enforced)
 
 - Only plans that **landed and were verified in at least one project** are admitted;
