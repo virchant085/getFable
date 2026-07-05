@@ -138,13 +138,25 @@ the same class of task instead of re-deriving it.
   run's executor claimed a clean-env success that had inherited test placeholders
   (see the [acceptance-bar](../acceptance-bar/SKILL.md) "environment-stated evidence"
   gate); (2) new CI jobs pass YAML
-  validation and still fail their first live run (driver/servics mismatches only
-  the real runner exposes) — budget a fix round after the first push; (3) the
+  validation and still fail their first live run (driver/service mismatches, image
+  build semantics — things only the real runner exposes) — this is now 2-for-2
+  across applications (a DB-driver mismatch, then an ARG-empty-string build crash),
+  so treat the post-push fix round as the NORM for any job whose subject can't run
+  locally, and push before closing the issue; (3) the
   supervisor rubber-stamping the report instead of re-running gates collapses the
-  whole pattern into ceremony.
+  whole pattern into ceremony; (4) executor runs can die mid-flight (session/rate
+  limits) — do NOT re-dispatch a fresh agent onto the half-built work: inventory
+  the working tree first, then RESUME the same agent with its context intact and an
+  explicit "verify what exists, don't recreate" instruction (a fresh agent auditing
+  someone else's half-built auth code is more error-prone than the original author
+  finishing).
 - Verified in: virchant_wei_Page issues #23 + #24 (commits `86c328f`…`f0b9029`,
   2026-07-03/04) — two slices, two supervisor-caught defects (a false clean-env
-  claim; a CI driver incompatibility), both fixed by the resumed executor
+  claim; a CI driver incompatibility), both fixed by the resumed executor.
+  Second application: issues #25 + #33 (commits `9b8f125`…`13906d5`, 2026-07-04/05)
+  — an interrupted-then-resumed executor run, an emergent-SSG defect adjudicated
+  from the executor's own honest CONCERNS section, and a first-live-run CI catch
+  (docker-build), all resolved through the same return-with-reproduction loop
 
 ## Admission bar (strictly enforced)
 

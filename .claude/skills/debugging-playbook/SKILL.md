@@ -123,6 +123,56 @@ Entry format:
   tool's own param validation, and the app-runtime seam keeps strict semantics
 - Provenance: virchant_wei_Page commit `d18538e` (supervisor-caught during issue #24)
 
+### "TypeError: Invalid URL" at prerender, only inside `docker build`
+- Environment: Docker multi-stage builds passing config as `ARG` → `ENV` into any
+  Node/Next build; generalizes to every `??`-based fallback fed by container env
+- Surface error: `Error occurred prerendering page "/…" · TypeError: Invalid URL
+  { input: '' }` — the same `pnpm build` is green locally and in non-Docker CI
+- Real cause: two semantics colliding. `ARG X` with no default + `ENV X=$X` makes X
+  an **empty string**, not unset; and `process.env.X ?? fallback` only catches
+  null/undefined, so `""` sails through into `new URL("")`. Locally the var is
+  genuinely unset → fallback works → the bug is invisible outside Docker
+- Observation point: reproducible WITHOUT Docker — `X="" pnpm build` triggers it
+  instantly. Fix at the code level, not the Dockerfile: treat empty/blank as absent
+  (`process.env.X?.trim() || fallback`) at the single source of truth; do NOT bake a
+  URL default into the ARG (that ships a wrong origin into self-host images)
+- Provenance: virchant_wei_Page commit `13906d5` — caught by a docker-build CI job
+  on its first live run (the machine had no local Docker)
+
+### A session-reading page silently prerenders as static (emergent vs declared dynamic)
+- Environment: Next.js App Router; any page that reads per-request state (session,
+  headers) through a wrapper that can throw before touching a dynamic API
+- Surface error: none — the build route table just shows `● SSG` for a page that
+  should be per-request, and a stale prerendered shell ("not signed in") can be
+  served to authenticated users
+- Real cause: Next marks a page dynamic only when a dynamic API (`headers()`,
+  `cookies()`) is actually REACHED during prerender. If an env-dependent
+  constructor throws first (e.g. a lazy auth instance failing closed in a no-env
+  build) and the error is caught, no dynamic API was touched — Next bakes the
+  catch-branch as static. On the platform (env present at build) the same page
+  "happens" to go dynamic — correctness becomes emergent from build-time env
+- Observation point: the route-table symbol (`●` vs `ƒ`) in a NO-env build is the
+  tell. Fix: DECLARE it — `export const dynamic = "force-dynamic"` on every page
+  whose output depends on the request, never rely on emergent detection
+- Provenance: virchant_wei_Page commit `34d7c89` (supervisor-caught during issue #25)
+
+### Top-level auth-instance construction breaks the no-env build (Better Auth + Next)
+- Environment: Better Auth (or any secret-holding instance) + Next.js + a strict
+  "build must pass with no env" contract; the CLI variant is Better Auth-specific
+- Surface error: `next build` with no env dies with the env module's
+  missing-variable error from pages that never use auth; separately, the Better
+  Auth CLI refuses configs importing `server-only` ("Please remove import…")
+- Real cause: every tutorial writes `export const auth = betterAuth({...})` at
+  module top level — construction (and env reads) run at IMPORT, and the module is
+  in the app import graph via the route handler/session seam, so the build parses
+  env it doesn't have. The CLI constraint then blocks the obvious `server-only` fix
+- Observation point: the three-file split resolves all constraints at once:
+  (1) a shared `buildAuthOptions(db)` module with NO `server-only` (CLI can
+  introspect it; one builder = generated schema can't drift); (2) the server-only
+  runtime module exposing a lazy memoised `getAuth()` (import parses nothing);
+  (3) a CLI-only eager config with a placeholder DB, never in the app import graph
+- Provenance: virchant_wei_Page commit `8617660` (issue #25)
+
 ## Related
 
 - If diagnosis cost exceeded half a day, archive it in

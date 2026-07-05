@@ -29,17 +29,17 @@ git commit + push (experience assets are versioned and revertible)
 | Skill | What it collects | Entries |
 |---|---|---|
 | [incident-review](.claude/skills/incident-review/SKILL.md) | Cross-project incident retrospectives: symptom + root cause + fix reference + prevention rule | 0 |
-| [debugging-playbook](.claude/skills/debugging-playbook/SKILL.md) | Misleading errors and pitfalls: the error points at A, the real cause is B | 6 |
+| [debugging-playbook](.claude/skills/debugging-playbook/SKILL.md) | Misleading errors and pitfalls: the error points at A, the real cause is B | 9 |
 | [arch-constraints](.claude/skills/arch-constraints/SKILL.md) | Technical approaches disproven by real-world failure | 0 |
 | [danger-ops](.claude/skills/danger-ops/SKILL.md) | Hard-to-undo operations and their required pre-checks | 3 (2 generic + 1 sourced) |
 | [acceptance-bar](.claude/skills/acceptance-bar/SKILL.md) | Universal definition of done: what counts as finished | 1 |
 | [solution-blueprints](.claude/skills/solution-blueprints/SKILL.md) | Solution-level templates: steps + acceptance criteria + risk points | 3 |
 
-Current source projects: `virchant_wei_Page` (5 debugging-playbook pitfalls; 3 solution
+Current source projects: `virchant_wei_Page` (8 debugging-playbook pitfalls; 3 solution
 blueprints — ADR re-verification → implementation plan, plan → GitHub issue backlog,
-supervised slice execution; 1 danger-ops category — agent-framework `init` into an
-existing repo; 1 acceptance-bar gate — environment-stated evidence) and `getFable`
-itself (1 debugging-playbook pitfall — CRLF line endings).
+supervised slice execution [verified twice]; 1 danger-ops category — agent-framework
+`init` into an existing repo; 1 acceptance-bar gate — environment-stated evidence)
+and `getFable` itself (1 debugging-playbook pitfall — CRLF line endings).
 
 ## Maintenance cadence
 
